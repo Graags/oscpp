@@ -12,6 +12,7 @@ class VGATerminal {
       PutChar(data[i]);
     }
   }
+  void PutChar(char c);
 
  private:
   uint8_t row_;
@@ -48,7 +49,6 @@ class VGATerminal {
     const size_t index = y * kWidth + x;
     VGABuffer[index] = Entry(c, color);
   }
-  void PutChar(char c);
   void NewLine() {
     column_ = 0;
     if ((++row_) == kHeight) {
