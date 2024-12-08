@@ -60,12 +60,19 @@ class VGATerminal {
     VGABuffer[index] = Entry(c, color);
   }
   void PutChar(char c) {
+    if (c == '\n') {
+      NewLine();
+      return;
+    }
     PutEntryAt(c, colour_, column_, row_);
     if ((++column_) == kWidth) {
-      column_ = 0;
-      if ((++row_) == kHeight) {
-        row_ = 0;
-      }
+      NewLine();
+    }
+  }
+  void NewLine() {
+    column_ = 0;
+    if ((++row_) == kHeight) {
+      row_ = 0;
     }
   }
 };
@@ -74,5 +81,6 @@ VGATerminal terminal;
 
 void kernel_main(void) {
   terminal.Initialize();
-  terminal.Write("Hello, kernel World!");
+  terminal.Write("Hello, kernel World!\n");
+  terminal.Write("Hello, kernel World!\n");
 }
