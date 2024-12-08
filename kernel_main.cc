@@ -1,6 +1,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+extern "C" {
+  void kernel_main(void);
+}
+
 enum vga_color {
   VGA_COLOR_BLACK = 0,
   VGA_COLOR_BLUE = 1,

@@ -1,18 +1,18 @@
 AS = i686-linux-gnu-as
-GCC = i686-linux-gnu-gcc
+GCC = i686-linux-gnu-g++
 
-all: myos_bin
+all: kernel.bin
 clean:
-	rm boot.o kernel_main.o myos.bin
+	rm boot.o kernel_main.o kernel.bin
 
 boot: boot.s
 	$(AS) boot.s -o boot.o
 
-kernel_main: kernel_main.c
-	$(GCC) -c kernel_main.c -o kernel_main.o -ffreestanding -O2 -Wall -Wextra
+kernel_main: kernel_main.cc
+	$(GCC) -c kernel_main.cc -o kernel_main.o -ffreestanding -O2 -Wall -Wextra
 
-myos_bin: boot kernel_main
-	$(GCC) -T linker.ld -o myos.bin -ffreestanding -nostdlib -O2 boot.o kernel_main.o -lgcc
+kernel.bin: boot kernel_main
+	$(GCC) -T linker.ld -o kernel.bin -ffreestanding -nostdlib -O2 boot.o kernel_main.o -lgcc
 
-run: clean all
-	qemu-system-i386 -kernel myos.bin
+run: all
+	qemu-system-i386 -kernel kernel.bin
