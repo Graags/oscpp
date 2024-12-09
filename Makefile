@@ -10,13 +10,16 @@ clean:
 boot.o: boot.s
 	$(AS) boot.s -o boot.o
 
+experiments.o: experiments.cc
+	$(CC) $(CXXFLAGS) -c experiments.cc -o experiments.o -fno-exceptions
+
 kernel_main.o: kernel_main.cc
-	$(CC) $(CXXFLAGS) -c kernel_main.cc -o kernel_main.o -fno-exceptions
+	$(CC) $(CXXFLAGS) -c kernel_main.cc -o kernel_main.o
 
 vga_terminal.o: vga_terminal.cc
 	$(CC) $(CXXFLAGS) -c vga_terminal.cc -o vga_terminal.o 
 
-kernel.bin: boot.o kernel_main.o vga_terminal.o linker.ld
+kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o linker.ld
 	$(CC) $(LDFLAGS) -T linker.ld -o kernel.bin *.o
 
 run: all
