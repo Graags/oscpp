@@ -19,15 +19,21 @@ class C {
 
 void dtor_test(int depth) {
   C c('0' + depth);
-  if (depth == 5) {
+  if (depth == 3) {
     return;
   }
   dtor_test(depth + 1);
 }
 
+inline uint32_t GetCodeSegmentID() {
+  uint32_t cs;
+  asm("movl %%cs, %0" : "=r" (cs));
+  return cs;
+}
+
 void kernel_main(void) {
   terminal.Initialize();
-  terminal.Write("Hello, kernel World!\n");
-  terminal.Write("Hello, kernel World!\n");
+  terminal << "Hello, kernel World!\n";
+  terminal << "CS = " << GetCodeSegmentID() << '\n';
   dtor_test(0);
 }

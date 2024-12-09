@@ -21,4 +21,19 @@ void VGATerminal::PutChar(char c) {
     NewLine();
   }
 }
+
+void VGATerminal::WriteHex(uint32_t data) {
+  Write("0x");
+  for (int i = 7; i >= 0; --i) {
+    uint32_t digit = (data & (15u << (i * 4))) >> (i * 4);
+    char c;
+    if (digit < 10) {
+      c = '0' + (uint8_t)digit;
+    } else {
+      c = 'A' + (uint8_t)digit - 10;
+    }
+    PutChar(c);
+  }
+}
+
 VGATerminal terminal;

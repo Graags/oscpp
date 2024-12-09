@@ -13,6 +13,19 @@ class VGATerminal {
     }
   }
   void PutChar(char c);
+  void WriteHex(uint32_t data);
+  VGATerminal& operator<<(char c) {
+    PutChar(c);
+    return *this;
+  }
+  VGATerminal& operator<<(const char* data) {
+    Write(data);
+    return *this;
+  }
+  VGATerminal& operator<<(uint32_t data) {
+    WriteHex(data);
+    return *this;
+  }
 
  private:
   uint8_t row_;

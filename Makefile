@@ -20,4 +20,4 @@ kernel.bin: boot.o kernel_main.o vga_terminal.o linker.ld
 	$(CC) $(LDFLAGS) -T linker.ld -o kernel.bin *.o
 
 run: all
-	qemu-system-i386 -kernel kernel.bin
+	qemu-system-x86_64 -kernel kernel.bin
