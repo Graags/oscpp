@@ -13,4 +13,5 @@ void kernel_main(void) {
   terminal << "Hello, kernel World!\n";
   interrupt::InitializeIDT();
   all_experiments();
+  terminal << "Reach end of kernel_main\n";
 }

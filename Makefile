@@ -1,11 +1,11 @@
 AS = i686-linux-gnu-as
 CC = clang++ --target=i686-linux-gnu
 CXXFLAGS = -ffreestanding -O3 -Wall -Wextra
-LDFLAGS = -ffreestanding -nostdlib -O3
+LDFLAGS = -ffreestanding -nostdlib -O3 -lgcc -lstdc++ -lsupc++
 all: kernel.bin
 clean:
-	rm *.o
-	rm *.bin
+	rm -f *.bin
+	rm -f *.o
 
 boot.o: boot.s
 	$(AS) boot.s -o boot.o
