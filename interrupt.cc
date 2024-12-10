@@ -34,11 +34,20 @@ __attribute__((aligned(16))) Descriptor descriptor_table[kNumInterrupt];
 __attribute__((aligned(16))) IDTInfo idt_info{.size = sizeof(descriptor_table) - 1,
                                               .offset = (uintptr_t)descriptor_table};
 
-__attribute__((noreturn)) void DefaultISR() { asm("cli;hlt"); }
+struct InterruptStackFrame {
+  uint32_t ip;
+  uint32_t cs;
+  uint32_t flags;
+} __attribute__((packed));
 
-__attribute__((noreturn)) void TestRoutine() {
-  terminal << "in ISR\n";
+void DefaultISR() {
+  terminal << "Unexpected interrupt!\n";
   asm("cli;hlt");
+}
+
+__attribute__((interrupt)) void TestRoutine(InterruptStackFrame *frame) {
+  terminal << frame->ip << ' ' << frame->cs << ' ' << frame->flags << '\n';
+  terminal << "in ISR\n";
 }
 
 void InitializeIDT() {
@@ -46,7 +55,7 @@ void InitializeIDT() {
   for (int i = 0; i < kNumInterrupt; ++i) {
     descriptor_table[i].SetISR((uint32_t)DefaultISR, reg_cs_value);
   }
-  descriptor_table[0x80].SetISR((uint32_t)TestRoutine, reg_cs_value);
+  descriptor_table[0x81].SetISR((uint32_t)TestRoutine, reg_cs_value);
   asm("lidt %0" ::"m"(idt_info));
 }
 

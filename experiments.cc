@@ -23,7 +23,14 @@ void dtor_test(int depth) {
 }
 
 void get_reg_cs_value() { terminal << "CS = " << GetCodeSegmentID() << '\n'; }
+
+void trigger_test_interrupt() {
+  asm("int $0x81");
+  asm("int $0x81");
+}
+
 void all_experiments() {
   dtor_test(0);
   get_reg_cs_value();
+  trigger_test_interrupt();
 }

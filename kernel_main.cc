@@ -13,5 +13,4 @@ void kernel_main(void) {
   terminal << "Hello, kernel World!\n";
   interrupt::InitializeIDT();
   all_experiments();
-  asm("int $0x80");
 }
