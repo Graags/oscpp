@@ -17,9 +17,12 @@ kernel_main.o: kernel_main.cc
 	$(CC) $(CXXFLAGS) -c kernel_main.cc -o kernel_main.o
 
 vga_terminal.o: vga_terminal.cc
-	$(CC) $(CXXFLAGS) -c vga_terminal.cc -o vga_terminal.o 
+	$(CC) $(CXXFLAGS) -c vga_terminal.cc -o vga_terminal.o
 
-kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o linker.ld
+interrupt.o: interrupt.cc
+	$(CC) $(CXXFLAGS) -c interrupt.cc -o interrupt.o
+
+kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o interrupt.o linker.ld
 	$(CC) $(LDFLAGS) -T linker.ld -o kernel.bin *.o
 
 run: all
