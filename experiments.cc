@@ -58,8 +58,8 @@ void inherit_test() {
 }
 
 void all_experiments() {
-  dtor_test(0);
-  get_reg_cs_value();
-  trigger_test_interrupt();
-  inherit_test();
+  // dtor_test(0);
+  // get_reg_cs_value();
+  // trigger_test_interrupt();
+  // inherit_test();
 }

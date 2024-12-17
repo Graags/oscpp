@@ -1,7 +1,7 @@
 AS = i686-linux-gnu-as
 CC = clang++ --target=i686-linux-gnu
-CXXFLAGS = -ffreestanding -O3 -Wall -Wextra
-LDFLAGS = -ffreestanding -nostdlib -O3 -lgcc -lstdc++ -lsupc++
+CXXFLAGS = -ffreestanding -O2 -Wall -Wextra
+LDFLAGS = -ffreestanding -nostdlib -O2 -lgcc -lstdc++ -lsupc++
 all: kernel.bin
 clean:
 	rm -f *.bin
@@ -20,9 +20,18 @@ vga_terminal.o: vga_terminal.cc
 	$(CC) $(CXXFLAGS) -c vga_terminal.cc -o vga_terminal.o
 
 interrupt.o: interrupt.cc
-	$(CC) $(CXXFLAGS) -c interrupt.cc -o interrupt.o
+	$(CC) $(CXXFLAGS) -c interrupt.cc -o interrupt.o -mgeneral-regs-only
 
-kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o interrupt.o linker.ld
+interrupt.s: interrupt.cc
+	$(CC) $(CXXFLAGS) -S interrupt.cc -o interrupt.s -mgeneral-regs-only
+
+pic8259.o: pic8259.cc
+	$(CC) $(CXXFLAGS) -c pic8259.cc -o pic8259.o -mgeneral-regs-only
+
+pic8259.s: pic8259.cc
+	$(CC) $(CXXFLAGS) -S pic8259.cc -o pic8259.s -mgeneral-regs-only
+
+kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o interrupt.o pic8259.o linker.ld
 	$(CC) $(LDFLAGS) -T linker.ld -o kernel.bin *.o
 
 run: all

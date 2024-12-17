@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "pic8259.h"
 #include "utils.h"
 #include "vga_terminal.h"
 
@@ -50,12 +51,21 @@ __attribute__((interrupt)) void TestRoutine(InterruptStackFrame *frame) {
   terminal << "in ISR\n";
 }
 
+__attribute__((interrupt)) void KeyboardISR(InterruptStackFrame *frame) {
+  terminal << "Keyboard interrupt\n";
+  uint8_t scancode = inb(0x60);
+  terminal << "Scan code: " << (uint32_t)scancode << '\n';
+  PIC::SendEOI(PIC::DeviceIRQ::Keyboard);
+}
+
 void InitializeIDT() {
   uint32_t reg_cs_value = GetCodeSegmentID();
   for (int i = 0; i < kNumInterrupt; ++i) {
     descriptor_table[i].SetISR((uint32_t)DefaultISR, reg_cs_value);
   }
   descriptor_table[0x81].SetISR((uint32_t)TestRoutine, reg_cs_value);
+  descriptor_table[PIC::IntNoOffset + PIC::DeviceIRQ::Keyboard].SetISR((uint32_t)KeyboardISR,
+                                                                       reg_cs_value);
   asm("lidt %0" ::"m"(idt_info));
 }
 
