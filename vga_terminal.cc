@@ -36,4 +36,15 @@ void VGATerminal::WriteHex(uint32_t data) {
   }
 }
 
+void VGATerminal::ScrollUpOneLine() {
+  for (size_t y = 1; y < kHeight; ++y) {
+    for (size_t x = 0; x < kWidth; ++x) {
+      VGABuffer[(y - 1) * kWidth + x] = VGABuffer[y * kWidth + x];
+    }
+  }
+  for (size_t x = 0; x < kWidth; ++x) {
+    VGABuffer[(kHeight - 1) * kWidth + x] = Entry(' ', colour_);
+  }
+}
+
 VGATerminal terminal;

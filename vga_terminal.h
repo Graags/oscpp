@@ -65,9 +65,11 @@ class VGATerminal {
   void NewLine() {
     column_ = 0;
     if ((++row_) == kHeight) {
-      row_ = 0;
+      ScrollUpOneLine();
+      --row_;
     }
   }
+  void ScrollUpOneLine();
 };
 
 extern VGATerminal terminal;
