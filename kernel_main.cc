@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "vga_terminal.h"
 #include "pic8259.h"
+#include "pit.h"
 
 extern "C" {
 void kernel_main(void);
@@ -12,6 +13,7 @@ void all_experiments();
 void kernel_main(void) {
   terminal.Initialize();
   terminal << "Hello, kernel World!\n";
+  InitializePIT();
   interrupt::InitializeIDT();
   interrupt::PIC::Init();
   all_experiments();

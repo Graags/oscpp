@@ -31,7 +31,10 @@ pic8259.o: pic8259.cc
 pic8259.s: pic8259.cc
 	$(CC) $(CXXFLAGS) -S pic8259.cc -o pic8259.s -mgeneral-regs-only
 
-kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o interrupt.o pic8259.o linker.ld
+pit.o: pit.cc
+	$(CC) $(CXXFLAGS) -c pit.cc -o pit.o
+
+kernel.bin: boot.o kernel_main.o vga_terminal.o experiments.o interrupt.o pic8259.o pit.o linker.ld
 	$(CC) $(LDFLAGS) -T linker.ld -o kernel.bin *.o
 
 run: all

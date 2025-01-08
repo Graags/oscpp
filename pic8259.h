@@ -4,7 +4,7 @@
 
 namespace interrupt::PIC {
 
-constexpr int IntNoOffset = 0x20;
+constexpr int IntNbOffset = 0x20;
 
 namespace DeviceIRQ {
 

@@ -58,14 +58,25 @@ __attribute__((interrupt)) void KeyboardISR(InterruptStackFrame *frame) {
   PIC::SendEOI(PIC::DeviceIRQ::Keyboard);
 }
 
+__attribute__((interrupt)) void TimerISR(InterruptStackFrame *frame) {
+  static uint32_t tick = 0;
+  tick++;
+  if (tick % 100 == 0) {
+    terminal << "Tick: " << tick << '\n';
+  }
+  PIC::SendEOI(PIC::DeviceIRQ::Timer);
+}
+
 void InitializeIDT() {
   uint32_t reg_cs_value = GetCodeSegmentID();
   for (int i = 0; i < kNumInterrupt; ++i) {
     descriptor_table[i].SetISR((uint32_t)DefaultISR, reg_cs_value);
   }
   descriptor_table[0x81].SetISR((uint32_t)TestRoutine, reg_cs_value);
-  descriptor_table[PIC::IntNoOffset + PIC::DeviceIRQ::Keyboard].SetISR((uint32_t)KeyboardISR,
+  descriptor_table[PIC::IntNbOffset + PIC::DeviceIRQ::Keyboard].SetISR((uint32_t)KeyboardISR,
                                                                        reg_cs_value);
+  descriptor_table[PIC::IntNbOffset + PIC::DeviceIRQ::Timer].SetISR((uint32_t)TimerISR,
+                                                                    reg_cs_value);
   asm("lidt %0" ::"m"(idt_info));
 }
 

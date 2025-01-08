@@ -85,8 +85,9 @@ void SendEOI(uint8_t irq) {
 }
 
 void Init() {
-  PICRemap(IntNoOffset, IntNoOffset + 8);
+  PICRemap(IntNbOffset, IntNbOffset + 8);
   DisableAll();
+  ClearMask(DeviceIRQ::Timer);
   ClearMask(DeviceIRQ::Keyboard);
   asm("sti");
 }
